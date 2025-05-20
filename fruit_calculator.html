@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>果實估價器</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #f2f2f2; }
+    h1 { color: #4CAF50; }
+    label { display: block; margin-top: 10px; }
+    input, select, button { padding: 5px; margin-top: 5px; }
+    #result { margin-top: 20px; background: #fff; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>🌱 Grow a Garden 果實估價器</h1>
+
+  <label>果實重量 (kg): <input type="number" id="weight" value="1" step="0.01"></label>
+  <label>基礎單價 (₵/kg): <input type="number" id="basePrice" value="500"></label>
+  <label>選擇字條（可多選）：
+    <select id="modifiers" multiple size="6">
+      <option value="golden">Golden ×5</option>
+      <option value="shocked">Shocked ×50</option>
+      <option value="frozen">Frozen ×10</option>
+      <option value="rainbow">Rainbow ×20</option>
+      <option value="disco">Disco ×15</option>
+      <option value="meteor">Meteor ×12</option>
+    </select>
+  </label>
+
+  <button onclick="calculate()">計算售價</button>
+
+  <div id="result"></div>
+
+  <script>
+    function calculate() {
+      const weight = parseFloat(document.getElementById("weight").value);
+      const basePrice = parseFloat(document.getElementById("basePrice").value);
+      const selected = Array.from(document.getElementById("modifiers").selectedOptions).map(opt => opt.value);
+
+      const multipliers = {
+        golden: 5,
+        shocked: 50,
+        frozen: 10,
+        rainbow: 20,
+        disco: 15,
+        meteor: 12
+      };
+
+      let totalMultiplier = 1;
+      for (const mod of selected) {
+        totalMultiplier *= multipliers[mod] || 1;
+      }
+
+      const baseValue = weight * basePrice;
+      const totalValue = baseValue * totalMultiplier;
+
+      document.getElementById("result").innerHTML = `
+        <h3>結果：</h3>
+        <p>基礎價值：<strong>${baseValue.toLocaleString()} ₵</strong></p>
+        <p>總倍率：<strong>${totalMultiplier}x</strong></p>
+        <p>最終售價：<strong style="color: darkgreen; font-size: 1.2em;">${totalValue.toLocaleString()} ₵</strong></p>
+      `;
+    }
+  </script>
+</body>
+</html>
